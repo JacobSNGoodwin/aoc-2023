@@ -1,0 +1,39 @@
+import { build } from 'bun';
+import { fileLinesToStringArray } from '../helpers';
+
+const isValid = (schematic: string, splits: number[]): boolean => {
+  const matches = schematic.match(/[#]+|[?]+/g) ?? [];
+  const matchLengths = matches.map((v) => v.length);
+
+  console.debug('splits and matches', {
+    splits,
+    matches,
+    matchLengths,
+  });
+
+  return splits.every((val, index) => val === matchLengths[index]);
+};
+
+const buildCombinations = (schematic: string, splits: number[]) => {
+  const unknownIndices = [...schematic.matchAll(/[?]/g)].forEach((match) =>
+    console.debug(match.index)
+  );
+};
+
+const lines = await fileLinesToStringArray('sample-1.txt');
+
+const springSchematics = lines.map((line) => {
+  const [schematic, strSplits] = line.split(' ');
+
+  const splits = strSplits.split(',').map((n) => parseInt(n, 10));
+
+  return {
+    schematic,
+    splits,
+  };
+});
+
+// Brute forcing this, though there must be some sort of dynamic solution where we can match
+// populate '?' up to a point and store potentially valid solutions
+
+buildCombinations(springSchematics[1].schematic, springSchematics[2].splits);
